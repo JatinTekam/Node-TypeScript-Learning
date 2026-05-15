@@ -1,5 +1,5 @@
 import type { NextFunction, Request,Response } from "express"
-//import type { RegisterUserRequest } from "../types/types.js";
+import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import userModel from "../models/userModel.js";
 
@@ -23,6 +23,7 @@ const createUser=async(req:Request,res:Response,next:NextFunction)=>{
         return next(error);
     }
 
+    const hashpassword=await bcrypt.hash(password,10);
 
 
     return res.json({
