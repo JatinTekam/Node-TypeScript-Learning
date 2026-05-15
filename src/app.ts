@@ -5,16 +5,21 @@ import userRouter from "./routes/userRouter.js";
 
 const app = express();
 
+app.use(express.json());
+
 //Routes
 app.get("/", async (req: Request, res: Response) => {
   res.json({ message: "Welcome to the Node API Example" });
 });
 
-//Global Error Handler
-app.use(globalErrorHander);
+
 
 //User Routes
-app.use("/api/users",userRouter)
+app.use("/api/users",userRouter);
+
+
+//Global Error Handler
+app.use(globalErrorHander);
 
 
 export default app;
