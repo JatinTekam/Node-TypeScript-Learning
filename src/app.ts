@@ -1,8 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
-//import createHttpError from "http-errors";
-//import type { User } from "./types/types.js";
 import globalErrorHander from "./middlewares/globalErrorHandler.js";
+import userRouter from "./routes/userRouter.js";
 
 const app = express();
 
@@ -13,5 +12,9 @@ app.get("/", async (req: Request, res: Response) => {
 
 //Global Error Handler
 app.use(globalErrorHander);
+
+//User Routes
+app.use("/api/users",userRouter)
+
 
 export default app;
