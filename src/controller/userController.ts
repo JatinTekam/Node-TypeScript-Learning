@@ -35,7 +35,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       password: hashpassword,
     });
 
-    return res.json({
+    return res.status(201).json({
       id: newUser._id,
       message: "User created successfully",
       email: newUser.email,
