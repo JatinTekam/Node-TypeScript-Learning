@@ -1,10 +1,10 @@
 import {HttpError} from "http-errors";
-import type{ Request, Response } from "express";
+import type{ Request, Response, NextFunction } from "express";
 import { config } from "../config/config.js";
 
 
 
-const globalErrorHandler = (error:HttpError,req:Request,res:Response)=>{
+const globalErrorHandler = (error:HttpError,req:Request,res:Response,next:NextFunction)=>{
     const code=error.statusCode || 500;
 
     res.status(code).json({

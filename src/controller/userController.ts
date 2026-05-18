@@ -2,6 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import userModel from "../models/userModel.js";
+import  jwt  from "jsonwebtoken";
+import { config } from "../config/config.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -68,7 +70,12 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
         return next(error);
     }
 
-    
+    const token=jwt.sign({sub:dbUser._id},config.jwtSecret as string,{algorithm:"HS256",expiresIn:"1d"});
+
+    res.json({
+        message:"Login successful",
+        accessToken:token,
+    })
 
   } catch (error) {
     next(error);
