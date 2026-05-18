@@ -2,8 +2,9 @@ import type { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import userModel from "../models/userModel.js";
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
+import type { User } from "../types/types.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,7 +20,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       return next(userDataError);
     }
 
-    const user = await userModel.findOne({ email });
+    const user: User | null = await userModel.findOne({ email });
 
     if (user) {
       const error = createHttpError(400, "User with this email already exists");
@@ -40,7 +41,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       email: newUser.email,
     });
   } catch (error) {
-    next(error);
+    return next(createHttpError(500, 'Error while creating user'));
   }
 };
 
@@ -56,29 +57,37 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       return next(userDataError);
     }
 
-    const dbUser =await userModel.findOne({email});
+    const dbUser: User | null = await userModel.findOne({ email });
 
-    if(!dbUser){
-        const error=createHttpError(404,"User not found");
-        return next(error);
+    if (!dbUser) {
+      const error = createHttpError(404, "User not found");
+      return next(error);
     }
 
-    const matchPassword=await bcrypt.compare(password,dbUser.password);
+    const matchPassword = await bcrypt.compare(password, dbUser.password);
 
-    if(!matchPassword){
-        const error=createHttpError(401,'Invalid password');
-        return next(error);
+    if (!matchPassword) {
+      const error = createHttpError(401, "Invalid password");
+      return next(error);
     }
 
-    const token=jwt.sign({sub:dbUser._id},config.jwtSecret as string,{algorithm:"HS256",expiresIn:"1d"});
+    const token = jwt.sign({ sub: dbUser._id }, config.jwtSecret as string, {
+      algorithm: "HS256",
+      expiresIn: "1d",
+    });
 
     res.json({
-        message:"Login successful",
-        accessToken:token,
-    })
-
+      message: "Login successful",
+      accessToken: token,
+      user: {
+        id: dbUser._id,
+        name: dbUser.name,
+        email: dbUser.email,
+      },
+    });
   } catch (error) {
-    next(error);
+   return next(createHttpError(500, "Error while creating jwt token"));
+   //return next(error);
   }
 };
 

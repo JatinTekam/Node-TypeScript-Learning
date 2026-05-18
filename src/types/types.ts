@@ -6,3 +6,7 @@ export interface User {
   email: string;
   password: string;
 }
+
+export type loginResponse= Omit<User,'password'>;
+
+
