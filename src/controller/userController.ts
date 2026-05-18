@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
-import type { User } from "../types/types.js";
+import type { User } from "../types/userTypes.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -41,7 +41,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       email: newUser.email,
     });
   } catch (error) {
-    return next(createHttpError(500, 'Error while creating user'));
+    return next(createHttpError(500, "Error while creating user"));
   }
 };
 
@@ -86,8 +86,8 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       },
     });
   } catch (error) {
-   return next(createHttpError(500, "Error while creating jwt token"));
-   //return next(error);
+    return next(createHttpError(500, "Error while creating jwt token"));
+    //return next(error);
   }
 };
 
