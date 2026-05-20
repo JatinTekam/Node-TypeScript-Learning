@@ -1,6 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
-import globalErrorHander from "./middlewares/globalErrorHandler.js";
+import globalErrorHandler from "./middlewares/globalErrorHandler.js";
 import userRouter from "./routes/userRouter.js";
 import bookRouter from "./routes/bookRouter.js";
 
@@ -21,7 +21,7 @@ app.use("/api/books",bookRouter);
 
 
 //Global Error Handler
-app.use(globalErrorHander);
+app.use(globalErrorHandler);
 
 
 export default app;
