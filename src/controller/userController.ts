@@ -71,14 +71,23 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       return next(error);
     }
 
+    // const name:string='jatintekam';
+
+    // let sub="";
+
+    // for(let i=0;i<name.length;i++){
+    //   sub+=name.charAt(Math.floor(Math.random()*name.length));
+    // }
+
     const token = jwt.sign({ sub: dbUser._id }, config.jwtSecret as string, {
       algorithm: "HS256",
       expiresIn: "1d",
     });
 
+    res.cookie("accessToken",token);
+
     res.json({
       message: "Login successful",
-      accessToken: token,
       user: {
         id: dbUser._id,
         name: dbUser.name,
@@ -91,4 +100,14 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createUser, loginUser };
+
+const allUsers = async(req:Request, res:Response, next:NextFunction)=>{
+      
+  const response=await fetch('https://dummyjson.com/products');
+  const userData=await response.json();
+
+  res.json({"data":userData});
+
+}
+
+export { createUser, loginUser, allUsers};
