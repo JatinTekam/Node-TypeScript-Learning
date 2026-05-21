@@ -8,7 +8,6 @@ const globalErrorHandler = (error:HttpError,req:Request,res:Response,next:NextFu
     const code=error.statusCode || 500;
 
     
-
     res.status(code).json({
         message: error.message || "Internal Server Error",
         errorStack: config.env === 'development' ? error.stack : '',
